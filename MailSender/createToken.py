@@ -33,28 +33,11 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'tokens client.json', SCOPES)
+                'tokensClient.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
-
-    try:
-        # Call the Gmail API
-        service = build('gmail', 'v1', credentials=creds)
-        results = service.users().labels().list(userId='me').execute()
-        labels = results.get('labels', [])
-
-        if not labels:
-            print('No labels found.')
-            return
-        print('Labels:')
-        for label in labels:
-            print(label['name'])
-
-    except HttpError as error:
-        # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
 
 
 if __name__ == '__main__':
